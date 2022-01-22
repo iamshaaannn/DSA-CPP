@@ -1,0 +1,71 @@
+/* 
+Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+
+The distance between two adjacent cells is 1.
+
+Example 1: 
+Input: mat = [[0,0,0],[0,1,0],[0,0,0]]
+Output: [[0,0,0],[0,1,0],[0,0,0]]
+
+Example 2:
+Input: mat = [[0,0,0],[0,1,0],[1,1,1]]
+Output: [[0,0,0],[0,1,0],[1,2,1]]
+
+*/
+
+Solution: 
+
+```cpp
+
+vector<vector<int>> solve(vector<vector<int>>& arr){
+	int m = arr.size();
+	int n = arr[0].size();
+	vector<vector<int>> ans(n, vector<int>(m, INT_MAX));
+	queue<pair<int, int>> q;
+	
+	for(int i = 0;i<n;i++){
+		for(int j = 0;j<m;j++){
+			if(arr[i][j] == 0){
+				ans[i][j] = 0; //base case. 
+				
+				q.push({i, j});
+			}
+		}
+	}
+	
+	vector<pair<int, int>> dirs = {{-1, 0 }, {1,0},{0,-1}, {0,1}};
+	while(!q.empty()){
+		auto it = q.front();
+		int a = it.first;
+		int b = it.second;
+		q.pop();
+		for(auto iPair : dirs){
+			int p = iPair.first;
+			int qx = iPair.second;
+			int nx = a + p;
+			int ny = b + qx;
+			if(nx < 0 or ny < 0 or nx >= n or ny >= m){
+				continue;	
+			}
+			if(ans[nx][ny] > ans[a][b]+1){
+				ans[nx][ny] = ans[a][b]+1;
+				q.push({nx, ny});
+			}
+		}
+	}
+	return ans;
+}
+int main(){
+	vector<vector<int>> arr = {{0,0,0}, {0,1,0}, {1,1,1}};
+	vector<vector<int>> ans = solve(arr);
+	for(auto rows: ans){
+		for(auto it: rows){
+			cout<<it<<" ";
+		}
+		cout<<endl;
+	}
+	
+	return 0;
+}
+```
+
